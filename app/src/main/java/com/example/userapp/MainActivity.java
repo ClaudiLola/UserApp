@@ -1,4 +1,5 @@
 package com.example.userapp;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+        toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 0);
         surfaceView = findViewById(R.id.surface_view);
         barcodeText = findViewById(R.id.barcode_text);
         initialiseDetectorsAndSources();
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
+            public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if (barcodes.size() != 0) {
 
@@ -102,10 +103,6 @@ public class MainActivity extends AppCompatActivity {
                         if (barcodes.valueAt(0).email != null) {
                             barcodeText.removeCallbacks(null);
                             barcodeData = barcodes.valueAt(0).email.address;
-                        } else {
-
-                            barcodeData = barcodes.valueAt(0).displayValue;
-
                         }
                         barcodeText.setText(barcodeData);
                         toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
